@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "iomanip": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp"
+    }
+}
