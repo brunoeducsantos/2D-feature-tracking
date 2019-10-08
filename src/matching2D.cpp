@@ -2,7 +2,7 @@
 #include "matching2D.hpp"
 
 using namespace std;
-
+using namespace cv;
 // Find best matches for keypoints in two camera images based on several matching methods
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
                       std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
@@ -18,7 +18,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        // ...
+          matcher= DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
     }
 
     // perform matching task
@@ -30,7 +30,19 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
 
-        // ...
+        // implement k-nearest-neighbor matching
+        double t = (double)cv::getTickCount();
+        std::vector< std::vector<DMatch> > knn_matches;
+        matcher->knnMatch( descSource, descRef, knn_matches,2 );
+
+        // filter matches using descriptor distance ratio test
+        for (size_t i = 0; i < knn_matches.size(); i++){
+            if (knn_matches[i][0].distance < 0.8f * knn_matches[i][1].distance){
+                matches.push_back(knn_matches[i][0]);
+            }
+        }
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << " (KNN) with n=" << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
     }
 }
 
@@ -128,7 +140,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     }
     
     if(detectorType.compare("BRISK")== 0){
-        //TODO Check parameters
+        //Check parameters
         cv::Ptr<cv::BRISK> detector= cv::BRISK::create();
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();

@@ -45,7 +45,7 @@ int main(int argc, const char *argv[])
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
         /* LOAD IMAGE INTO BUFFER */
-
+        std::cout<<"IMAGE=="<<imgIndex<<std::endl;
         // assemble filenames for current index
         ostringstream imgNumber;
         imgNumber << setfill('0') << setw(imgFillWidth) << imgStartIndex + imgIndex;
@@ -71,7 +71,7 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "SHITOMASI";
+        string detectorType = "ORB";
 
         if (detectorType.compare("SHITOMASI") == 0)
         {
@@ -110,15 +110,9 @@ int main(int argc, const char *argv[])
         cout << "#2 : DETECT KEYPOINTS done" << endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
-
-        //// STUDENT ASSIGNMENT
-        //// TASK MP.4 -> add the following descriptors in file matching2D.cpp and enable string-based selection based on descriptorType
-        //// -> BRIEF, ORB, FREAK, AKAZE, SIFT
-
         cv::Mat descriptors;
         string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
-        //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer
         (dataBuffer.end() - 1)->descriptors = descriptors;
@@ -135,15 +129,9 @@ int main(int argc, const char *argv[])
             string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
             string selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
 
-            //// STUDENT ASSIGNMENT
-            //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
-            //// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
-
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
                              matches, descriptorType, matcherType, selectorType);
-
-            //// EOF STUDENT ASSIGNMENT
 
             // store matches in current data frame
             (dataBuffer.end() - 1)->kptMatches = matches;
