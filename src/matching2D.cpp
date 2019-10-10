@@ -130,7 +130,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
     int nb_detected_points=100;
-     double t = (double)cv::getTickCount();
+    double t = (double)cv::getTickCount();
     if(detectorType.compare("FAST")== 0){
         cv::Ptr<cv::FastFeatureDetector> detector= cv::FastFeatureDetector::create(nb_detected_points, true);
         detector->detect(img, keypoints);
@@ -148,7 +148,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
 
     }
     if(detectorType.compare("ORB")== 0){
-        cv::Ptr<cv::ORB> detector= cv::ORB::create();
+        cv::Ptr<cv::ORB> detector= cv::ORB::create(3000);
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         cout << "ORB detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
@@ -167,6 +167,59 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         detector->detect(img, keypoints);
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         cout << "AKAZE detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+    }
+      if(detectorType.compare("HARRIS")== 0){
+        // Detector parameters
+        int blockSize = 2;     // for every pixel, a blockSize × blockSize neighborhood is considered
+        int apertureSize = 3;  // aperture parameter for Sobel operator (must be odd)
+        int minResponse = 100; // minimum value for a corner in the 8bit scaled response matrix
+        double k = 0.04;       // Harris parameter (see equation for details)
+        cv::Mat dst, dst_norm, dst_norm_scaled;
+        dst = cv::Mat::zeros(img.size(), CV_32FC1);
+        cv::cornerHarris(img, dst, blockSize, apertureSize, k, cv::BORDER_DEFAULT);
+        std::cout<<"AAA";
+        
+        cv::normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
+        std::cout<<"AAA";
+
+        cv::convertScaleAbs(dst_norm, dst_norm_scaled);
+        // locate local maxima in the Harris response matrix 
+        // Response matrix is a score for each local neighboor corner : det(M) - k*tr(M)^2
+        // where k is the empirical harris parameter
+        double maxOverlap = 0.0;
+        for(int i=0; i<dst.rows; i++){
+            for(int j=0; j<dst.cols; j++){
+                int response = (int)dst.at<float>(j,i);
+                if(response> minResponse){
+                     cv::KeyPoint newKeyPoint;
+                     newKeyPoint.pt = cv::Point2f(i, j);
+                     newKeyPoint.size = 2 * apertureSize;
+                     newKeyPoint.response = response;
+                     bool bOverlap = false;
+                    for (auto it = keypoints.begin(); it != keypoints.end(); ++it)
+                {
+                      double kptOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
+                       if (kptOverlap > maxOverlap)
+                    {
+                        bOverlap = true;
+                        if (newKeyPoint.response > (*it).response)
+                        {                      // if overlap is >t AND response is higher for new kpt
+                            *it = newKeyPoint; // replace old key point with new one
+                            break;             // quit loop over keypoints
+                        }
+
+                    }
+                }
+                    if (!bOverlap)
+                {                                     // only add new key point if no overlap has been found in previous NMS
+                    keypoints.push_back(newKeyPoint); // store new keypoint in dynamic list
+                }
+
+            }
+        }
+    }
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << "HARRIS detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
     }
     
      // visualize results

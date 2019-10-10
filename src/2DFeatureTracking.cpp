@@ -22,6 +22,13 @@ using namespace std;
 int main(int argc, const char *argv[])
 {
 
+    /*Parameters*/
+    //1. KeyPoints Type: HARRIS, FAST, BRISK, ORB, AKAZE, and SIFT
+    //2. Descriptors Type: BRIEF, ORB, FREAK, AKAZE, SIFT
+    //3. matcher Type : MAT_BF, MAT_FLANN
+    //4. descriptor Type : DES_BINARY, DES_HOG
+    //5. selector Type:  SEL_NN, SEL_KNN
+
     /* INIT VARIABLES AND DATA STRUCTURES */
 
     // data location
@@ -71,7 +78,7 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "ORB";
+        string detectorType = argv[1];
 
         if (detectorType.compare("SHITOMASI") == 0)
         {
@@ -111,7 +118,7 @@ int main(int argc, const char *argv[])
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
         cv::Mat descriptors;
-        string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        string descriptorType = argv[2]; // BRIEF, ORB, FREAK, AKAZE, SIFT
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
 
         // push descriptors for current frame to end of data buffer
@@ -125,9 +132,9 @@ int main(int argc, const char *argv[])
             /* MATCH KEYPOINT DESCRIPTORS */
 
             vector<cv::DMatch> matches;
-            string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
-            string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
-            string selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
+            string matcherType = argv[3];        // MAT_BF, MAT_FLANN
+            string descriptorType = argv[4]; // DES_BINARY, DES_HOG
+            string selectorType = argv[5];       // SEL_NN, SEL_KNN
 
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,

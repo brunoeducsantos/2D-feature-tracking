@@ -13,6 +13,5 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIBRARY_DIRS})
 add_definitions(${OpenCV_DEFINITIONS})
 
-# Executable for create matrx exercise
 add_executable (2D_feature_tracking src/matching2D.cpp src/2DFeatureTracking.cpp)
 target_link_libraries (2D_feature_tracking ${OpenCV_LIBRARIES})
