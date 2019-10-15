@@ -168,8 +168,24 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         cout << "AKAZE detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
     }
-      if(detectorType.compare("HARRIS")== 0){
-        // Detector parameters
+      
+    
+     // visualize results
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = "Shi-Tomasi Corner Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+        cv::waitKey(0);
+    }
+}
+
+
+void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis){
+      double t = (double)cv::getTickCount();
+    // Detector parameters
         int blockSize = 2;     // for every pixel, a blockSize × blockSize neighborhood is considered
         int apertureSize = 3;  // aperture parameter for Sobel operator (must be odd)
         int minResponse = 100; // minimum value for a corner in the 8bit scaled response matrix
@@ -177,10 +193,8 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         cv::Mat dst, dst_norm, dst_norm_scaled;
         dst = cv::Mat::zeros(img.size(), CV_32FC1);
         cv::cornerHarris(img, dst, blockSize, apertureSize, k, cv::BORDER_DEFAULT);
-        std::cout<<"AAA";
         
         cv::normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
-        std::cout<<"AAA";
 
         cv::convertScaleAbs(dst_norm, dst_norm_scaled);
         // locate local maxima in the Harris response matrix 
@@ -220,10 +234,8 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     }
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         cout << "HARRIS detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-    }
-    
-     // visualize results
-    if (bVis)
+            // visualize results
+        if (bVis)
     {
         cv::Mat visImage = img.clone();
         cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
