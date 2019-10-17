@@ -92,7 +92,7 @@ int main(int argc, const char *argv[])
             detKeypointsModern(keypoints,imgGray,detectorType, false);
         }
 
-        //TODO:  only keep keypoints on the preceding vehicle
+        // only keep keypoints on the preceding vehicle
         bool bFocusOnVehicle = true;
         vector<cv::KeyPoint> vehicleKeypts;
         cv::Rect vehicleRect(535, 180, 180, 150);

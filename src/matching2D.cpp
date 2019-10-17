@@ -193,7 +193,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
         cv::Mat dst, dst_norm, dst_norm_scaled;
         dst = cv::Mat::zeros(img.size(), CV_32FC1);
         cv::cornerHarris(img, dst, blockSize, apertureSize, k, cv::BORDER_DEFAULT);
-        
+        //normalize from 0 to 255 image dst
         cv::normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
 
         cv::convertScaleAbs(dst_norm, dst_norm_scaled);
@@ -201,9 +201,9 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
         // Response matrix is a score for each local neighboor corner : det(M) - k*tr(M)^2
         // where k is the empirical harris parameter
         double maxOverlap = 0.0;
-        for(int i=0; i<dst.rows; i++){
-            for(int j=0; j<dst.cols; j++){
-                int response = (int)dst.at<float>(j,i);
+        for(int i=0; i<dst_norm.rows; i++){
+            for(int j=0; j<dst_norm.cols; j++){
+                int response = (int)dst_norm.at<float>(i,j);
                 if(response> minResponse){
                      cv::KeyPoint newKeyPoint;
                      newKeyPoint.pt = cv::Point2f(i, j);
@@ -239,7 +239,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     {
         cv::Mat visImage = img.clone();
         cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-        string windowName = "Shi-Tomasi Corner Detector Results";
+        string windowName = "Harris Detector Corner Results";
         cv::namedWindow(windowName, 6);
         imshow(windowName, visImage);
         cv::waitKey(0);
