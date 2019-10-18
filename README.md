@@ -24,3 +24,7 @@
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./2D_feature_tracking`.
+
+## Disclamer
+This project was cloned from [Udacity 2D Feature tracking](https://github.com/udacity/SFND_2D_Feature_Tracking) in the context of [Sensor Fusion Engineer nanodegree](https://www.udacity.com/course/sensor-fusion-engineer-nanodegree--nd313).
+
