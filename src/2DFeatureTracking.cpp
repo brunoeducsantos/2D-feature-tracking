@@ -102,6 +102,7 @@ int main(int argc, const char *argv[])
                if(vehicleRect.contains(keypoints[i].pt))
                     vehicleKeypts.push_back(keypoints[i]);
            }
+           std::cout<<detectorType<<" Number of points in ROI="<< vehicleKeypts.size()<<std::endl;
         }
 
 

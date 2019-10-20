@@ -200,16 +200,18 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
         // locate local maxima in the Harris response matrix 
         // Response matrix is a score for each local neighboor corner : det(M) - k*tr(M)^2
         // where k is the empirical harris parameter
+        
         double maxOverlap = 0.0;
         for(int i=0; i<dst_norm.rows; i++){
             for(int j=0; j<dst_norm.cols; j++){
                 int response = (int)dst_norm.at<float>(i,j);
                 if(response> minResponse){
                      cv::KeyPoint newKeyPoint;
-                     newKeyPoint.pt = cv::Point2f(i, j);
+                     newKeyPoint.pt = cv::Point2f(j, i);
                      newKeyPoint.size = 2 * apertureSize;
                      newKeyPoint.response = response;
                      bool bOverlap = false;
+                   
                     for (auto it = keypoints.begin(); it != keypoints.end(); ++it)
                 {
                       double kptOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
