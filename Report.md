@@ -24,7 +24,7 @@ The performance analysis will be based on:
 
 ## Distribution of keypoints 
 
-
+<img src="images/keypoints.png" width="820" height="248" />
 
 
 
