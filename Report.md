@@ -30,4 +30,5 @@ The distribution of keypoints generation above displayed shows that the algorith
 
 
 ## Reference
-* (Performance data of descriptors and keypoints generators)[https://docs.google.com/spreadsheets/d/1XjCx8vCeGhiXPxjZbKCU_fEnNz826EIpMes8a6IjI4E/edit?usp=sharing]
+* [Performance data of descriptors and keypoints generators](https://docs.google.com/spreadsheets/d/1XjCx8vCeGhiXPxjZbKCU_fEnNz826EIpMes8a6IjI4E/edit?usp=sharing)
+
