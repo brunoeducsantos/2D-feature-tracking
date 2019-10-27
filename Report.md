@@ -68,7 +68,7 @@ The top three pair detector/descriptor regarding time performance are:
 
 ## Conclusion
 
-Regarding the intersection between time performance and the number of matched points between frames, FAST-BRIEF seems a good candidate to be the recommended candidate. In addition, it has the most true positive number of matches between frames ( checkf [image_2]).
+Regarding the intersection between time performance and the number of matched points between frames, FAST-BRIEF seems a good candidate to be the recommended candidate. In addition, it has the most true positive number of matches between frames (check [image_2]). Therefore, FAST-BRIEF is the chosen candidate to find consisten descriptors across frames in this dataset.
 
 ## Reference
 * [Performance data of descriptors and keypoints generators](https://docs.google.com/spreadsheets/d/1XjCx8vCeGhiXPxjZbKCU_fEnNz826EIpMes8a6IjI4E/edit?usp=sharing)
