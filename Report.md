@@ -24,8 +24,15 @@ The performance analysis will be based on:
 
 ## Distribution of keypoints 
 
+<<<<<<< HEAD
 <img src="images/keypoints.png" width="820" height="248" />
+=======
+<img src="images/keypoints_dist.png" width="820" height="248" />
+The distribution of keypoints generation above displayed shows that the algorithms with top number of points, either inside the region of interest (the car) either per the all frame, are BRISK and ORB. In addition, we can tell that the number of points generated per frame is quite stable per algorithm.  
+
+>>>>>>> 2785a1dcfd642d23e2b12f03d880684dfe6a2894
 
 
-
+## Reference
+* [Performance data of descriptors and keypoints generators](https://docs.google.com/spreadsheets/d/1XjCx8vCeGhiXPxjZbKCU_fEnNz826EIpMes8a6IjI4E/edit?usp=sharing)
 
