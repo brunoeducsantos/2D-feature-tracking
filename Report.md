@@ -59,6 +59,20 @@ Similarly to AKAZE keypoint distribution, **SHITOMASI** has a non-uniform densit
 **SIFT** has lower density of points the ROI, but it has a uniform distribution of keypoints describing the car image patch.
 
 
+
+## Time performance for keypoint detection and descriptor extraction
+The top three pair detector/descriptor regarding time performance are:
+* FAST-BRIEF(~0.58/0.66 ms)
+* FAST-BRISK (~0.6/0.8 ms)
+* FAST-ORB (~0.4199/1.0413 ms)
+
+## Conclusion
+
+Regarding the intersection between time performance and the number of matched points between frames, FAST-BRIEF seems a good candidate to be the recommended candidate. In addition, it has the most true positive number of matches between frames ( checkf [image_2]).
+
 ## Reference
 * [Performance data of descriptors and keypoints generators](https://docs.google.com/spreadsheets/d/1XjCx8vCeGhiXPxjZbKCU_fEnNz826EIpMes8a6IjI4E/edit?usp=sharing)
+
+
+
 
