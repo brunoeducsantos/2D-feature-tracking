@@ -13,7 +13,8 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 
     if (matcherType.compare("MAT_BF") == 0)
     {
-        int normType = cv::NORM_HAMMING;
+        //int normType = cv::NORM_HAMMING;
+        int normType= cv::NORM_L1;
         matcher = cv::BFMatcher::create(normType, crossCheck);
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
@@ -76,6 +77,9 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
         double edgeThreshold=10; 
         double sigma=1.6;
         extractor = cv::xfeatures2d::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold,  edgeThreshold, sigma);
+    }
+    if(descriptorType.compare("BRIEF") == 0){
+        extractor= cv::xfeatures2d::BriefDescriptorExtractor::create();
     }
     
 
