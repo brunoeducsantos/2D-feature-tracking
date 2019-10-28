@@ -169,7 +169,97 @@ For Harris implementation, 3 mains steps were followed:
 2. Find the keypoints above a minimum threshold 
 3. If there is overlaping of keypoints region, replace the new keypoint by the old one
 
-For the the modern keypoints detector, if clauses were created and within each one an instance of the algorithm is performed.
+For the the modern keypoints detector, if clauses were created comparing with a string checking the algorithm within each one an instance is declared as well as the computation of keypoints.
+
+### Keypoint Removal
+
+For keypoints removal, it was defined a rectangle region in OpenCV and checked if the computed keypoints were inside the region.           
+```
+for(int i=0;i<keypoints.size();i++){
+ if(vehicleRect.contains(keypoints[i].pt))
+    vehicleKeypts.push_back(keypoints[i]);
+  }
+```
+### Keypoint Descriptors
+For keypoint descriptors , a similar approach to keypoints generator was taken by using string comparation and if clauses.
+
+```
+ // select appropriate descriptor
+    cv::Ptr<cv::DescriptorExtractor> extractor;
+    if (descriptorType.compare("BRISK") == 0)
+    {
+
+        int threshold = 30;        // FAST/AGAST detection threshold score.
+        int octaves = 3;           // detection octaves (use 0 to do single scale)
+        float patternScale = 1.0f; // apply this scale to the pattern used for sampling the neighbourhood of a keypoint.
+
+        extractor = cv::BRISK::create(threshold, octaves, patternScale);
+    }
+    if(descriptorType.compare("ORB") == 0){
+        extractor= cv::ORB::create();
+    }
+    if(descriptorType.compare("FREAK") == 0){
+        extractor= cv::xfeatures2d::FREAK::create();
+    }
+    if(descriptorType.compare("AKAZE") == 0){
+        extractor= cv::AKAZE::create();
+    }
+    if(descriptorType.compare("SIFT") == 0){
+        int  nfeatures=0;
+        int nOctaveLayers = 3;
+        double contrastThreshold=0.04; 
+        double edgeThreshold=10; 
+        double sigma=1.6;
+        extractor = cv::xfeatures2d::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold,  edgeThreshold, sigma);
+    }
+    if(descriptorType.compare("BRIEF") == 0){
+        extractor= cv::xfeatures2d::BriefDescriptorExtractor::create();
+    }
+    
+
+```
+
+### Descriptor Matching
+The descriptor matching is divided in FLANN based and brute force if clauses comparing its string names.
+After this, it is used KNN algorithm to given the points closer to each other and match between frames. ALthough, only 80% of the clusters were selected to reduce false positives.
+
+```
+if (matcherType.compare("MAT_BF") == 0)
+    {
+        //int normType = cv::NORM_HAMMING;
+        int normType= cv::NORM_L1;
+        matcher = cv::BFMatcher::create(normType, crossCheck);
+    }
+    else if (matcherType.compare("MAT_FLANN") == 0)
+    {
+          matcher= DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
+    }
+
+    // perform matching task
+    if (selectorType.compare("SEL_NN") == 0)
+    { // nearest neighbor (best match)
+
+        matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
+    }
+    else if (selectorType.compare("SEL_KNN") == 0)
+    { // k nearest neighbors (k=2)
+
+        // implement k-nearest-neighbor matching
+        double t = (double)cv::getTickCount();
+        std::vector< std::vector<DMatch> > knn_matches;
+        matcher->knnMatch( descSource, descRef, knn_matches,2 );
+
+        // filter matches using descriptor distance ratio test
+        for (size_t i = 0; i < knn_matches.size(); i++){
+            if (knn_matches[i][0].distance < 0.8f * knn_matches[i][1].distance){
+                matches.push_back(knn_matches[i][0]);
+            }
+        }
+    
+
+```
+
+
 
 
 
