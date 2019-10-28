@@ -219,9 +219,9 @@ For keypoint descriptors , a similar approach to keypoints generator was taken b
 
 ```
 
-### Descriptor Matching
+### Descriptor Matching & Descriptor Distance Ratio
 The descriptor matching is divided in FLANN based and brute force if clauses comparing its string names.
-After this, it is used KNN algorithm to given the points closer to each other and match between frames. ALthough, only 80% of the clusters were selected to reduce false positives.
+After this, it is used KNN algorithm to given the points closer to each other and match between frames. ALthough, only descriptor distance ratio test, which looks at the ratio of best vs. second-best match to decide whether to keep an associated pair of keypoints. This ration is usually around 0.8 to reduce false positives.
 
 ```
 if (matcherType.compare("MAT_BF") == 0)
