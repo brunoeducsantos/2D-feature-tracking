@@ -164,6 +164,14 @@ int nb_detected_points=100;
     }
     
 ```
+For Harris implementation, 3 mains steps were followed:
+1. Compute the reponse matrix per keypoint
+2. Find the keypoints above a minimum threshold 
+3. If there is overlaping of keypoints region, replace the new keypoint by the old one
+
+For the the modern keypoints detector, if clauses were created and within each one an instance of the algorithm is performed.
+
+
 
 ## Disclamer
 This project was cloned from [Udacity 2D Feature tracking](https://github.com/udacity/SFND_2D_Feature_Tracking) in the context of [Sensor Fusion Engineer nanodegree](https://www.udacity.com/course/sensor-fusion-engineer-nanodegree--nd313).
